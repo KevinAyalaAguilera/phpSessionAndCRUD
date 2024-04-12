@@ -1,23 +1,40 @@
 <?php
-	session_start();
-	include_once "./controller.php";
+	include_once "../controller/controller.php";
 	if (isset($_SESSION["rol"])) {
 		include_once "./header.php";
-		if ($_SESSION["rol"] == "admin") {
-			echo "<h3>Create user</h3>";
-		} else {
-			header("location: ./listProducts.php");
+		if ($_SESSION["rol"] != "superadmin") {
+			header("location: ../index.php");
 		}
 	} else header("location: ../index.php");
 ?>
-<form method="post">
-	<input type="number" placeholder="ID" name="id">
-	<input type="text" placeholder="User" name="user">
-	<input type="password" placeholder="Password" name="password">
-	<input type="text" placeholder="admin / normal" name="rol">
-	<input type="submit" value="Create" name="create">
+<form method="post" class="lineasFilter">
+	<h3>Crear usuario</h3>
+	<input type="text" placeholder="Nombre" name="user" class="btn input" required>
+	<input type="text" placeholder="Contraseña" name="password" class="btn input" required>
+	<select name="rol" placeholder="Usuario" class="btn input" required>
+		<option value="user">Usuario</option>
+		<option value="admin">Admin</option>
+		<option value="superadmin">Super Admin</option>
+	</select>
+	<select name="empresa" placeholder="Empresa" class="btn input" required>
+		<option value="1">Empresa</option>
+		<?php 
+			$empresas = getArrayEmpresas();
+			for ($i=0; $i < count($empresas); $i++) { 
+				echo '<option value="' . $empresas[$i]['id'] . '">' . $empresas[$i]['name'] . '</option>';
+			}
+		?>
+	</select>
+	<input type="submit" value="Crear" class="btn button" name="create">
+	<p id="notificacion"></p>
 </form>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" fill="cyan" class="bi bi-person-circle" viewBox="0 0 16 16">
+  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+  <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+</svg>
 <?php
 	createUser();
+	listUsers();
 	include_once "./footer.php";
 ?>
+<script>document.getElementById("header-btn-cuser").classList.add("header-btn-selected")</script>

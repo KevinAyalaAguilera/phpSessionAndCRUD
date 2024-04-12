@@ -1,8 +1,5 @@
 <?php
-	session_start();
-	include_once "./pages/controller.php";
-	include_once "./pages/header.php";
-	if (!isset($_SESSION["user"])) showLogIn();
-	if (isset($_POST["login"])) logIn();
-	include_once "./pages/footer.php";
+	include_once "./controller/controller.php";
+	if (isset($_SESSION["user"])) header("location: ./pages/listServices.php");
+	else header("location: ./pages/showLogIn.php");
 ?>

@@ -1,37 +1,66 @@
-<?php 
-	if (isset($_SESSION["rol"])) {
-		echo '<head>';
-		echo '<link rel="stylesheet" href="../css/style.css">';
-		echo '</head>';
-		if ($_SESSION["rol"] == "admin") {
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="../css/style.css">
+	<title>Grupo Valbea</title>
+	<link rel="icon" href="../img/cropped-Logo-valbea-1-32x32.png" sizes="32x32">
+</head>
+<?php
+if (isset($userROL)) {
+	if ($userEmpresaID == $idValbea) {
+		if ($userROL == "superadmin") {
+			// superadmin
 			echo '<div class="header">';
-			echo '<h3>Shop (admin '. $_SESSION["user"] . ')</h3>';
-			echo '<table><tr>';
-			echo '<td><a href="./createUser.php">Create user</a></td>';
-			echo '<td><a href="./createProduct.php">Create product</a></td>';
-			echo '<td><a href="./deleteProduct.php">Remove product</a></td>';
-			echo '<td><a href="./modifyProduct.php">Modify product</a></td>';
-			echo '<td><a href="./listProducts.php">Product list</a></td>';
-			echo '<td><a href="./logOff.php">Log off</a></td>';
-			echo '</tr></table>';
+			echo '<div class="headerMenu">';
+			echo '<img src="../img/cropped-Logo-valbea-300x277.png" class="mainlogo soloDesktop">';
+			echo '<a class="btn button" id="header-btn-cme" href="./myProfile.php?id=' . $_SESSION['userId'] . '">' . ucfirst($userName) . '</a>';
+			echo '<a class="btn button" id="header-btn-clist" href="./listServices.php">Servicios</a>';
+			echo '<a class="btn button" id="header-btn-cservice" href="./createService.php">Crear Servicio</a>';
+			echo '<a class="btn button" id="header-btn-cuser" class="superadmin" href="./createUser.php">Usuarios</a>';
+			echo '<a class="btn button" id="header-btn-cempresa" class="superadmin" href="./createEmpresa.php">Empresas</a>';
+			echo '<a class="btn button" id="header-btn-clog" class="superadmin" href="./mostrarLog.php">Registro</a>';
+			echo '<a class="btn button" id="header-btn-cconfig" class="superadmin" href="./config.php">Configuración</a>';
+			echo '<a class="btn button" href="./logOff.php">Salir</a>';
+			echo '</div>';
+			echo '</div>';
+		} else if ($userROL == "admin") {
+			// admin
+			echo '<div class="header">';
+			echo '<div class="headerMenu">';
+			echo '<img src="../img/cropped-Logo-valbea-300x277.png" class="mainlogo soloDesktop">';
+			echo '<a class="btn button" id="header-btn-cme" href="./myProfile.php?id=' . $_SESSION['userId'] . '">' . ucfirst($userName) . '</a>';
+			echo '<a class="btn button" id="header-btn-clist" href="./listServices.php">Servicios</a>';
+			echo '<a class="btn button" id="header-btn-cservice" href="./createService.php">Crear Servicio</a>';
+			echo '<a class="btn button" href="./logOff.php">Salir</a>';
+			echo '</div>';
+			echo '</div>';
+		} else {
+			// user
+			echo '<div class="header">';
+			echo '<div class="headerMenu">';
+			echo '<img src="../img/cropped-Logo-valbea-300x277.png" class="mainlogo soloDesktop">';
+			echo '<a class="btn button" id="header-btn-cme" href="./myProfile.php?id=' . $_SESSION['userId'] . '">' . ucfirst($userName) . '</a>';
+			echo '<a class="btn button" id="header-btn-clist" href="./listServices.php">Servicios</a>';
+			echo '<a class="btn button" href="./logOff.php">Salir</a>';
+			echo '</div>';
 			echo '</div>';
 		}
-		else {
-			echo '<div class="header">';
-			echo '<h3>Shop (user '. $_SESSION["user"] . ')</h3>';
-			echo '<table><tr>';
-			echo '<td><a href="./listProducts.php">Product list</a></td>';
-			echo '<td><a href="./logOff.php">Log off</a></td>';
-			echo '</tr></table>';
-			echo '</div>';
-		}
-	}
-	else {
-		echo '<head>';
-		echo '<link rel="stylesheet" href="./css/style.css">';
-		echo '</head>';
+	} else {
+		// empresa externa
 		echo '<div class="header">';
-		echo '<h3>Header</h3>';
+		echo '<div class="headerMenu">';
+		echo '<img src="../img/cropped-Logo-valbea-300x277.png" class="mainlogo soloDesktop">';
+		echo '<a class="btn button" id="header-btn-cme" href="./myProfile.php?id=' . $_SESSION['userId'] . '">' . ucfirst($userName) . '</a>';
+		echo '<a class="btn button" id="header-btn-clist" href="./listServices.php">Servicios</a>';
+		echo '<a class="btn button" id="header-btn-cservice" href="./createService.php">Crear Servicio</a>';
+		echo '<a class="btn button" href="./logOff.php">Salir</a>';
+		echo '</div>';
 		echo '</div>';
 	}
+} else {
+	// iniciar sesión
+
+}
 ?>
