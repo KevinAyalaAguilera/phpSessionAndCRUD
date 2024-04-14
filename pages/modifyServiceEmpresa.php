@@ -74,7 +74,7 @@ echo '<form id="uploadForm1" enctype="multipart/form-data" class="lineasFilter s
 echo '<input type="hidden" name="change" value="0">';
 echo '<input type="hidden" name="id" value="' . $service["id"] . '">';
 echo '<input class="inputfile" type="file" id="fileInput" name="file">';
-echo '<label class="btn button" for="fileInput" data-multiple-caption="{count} files selected" multiple >Subir archivo</label>';
+echo '<label class="btn button bootstrap icongeneric upload" for="fileInput" data-multiple-caption="{count} files selected" multiple >Subir archivo</label>';
 echo '<button id="submitBtnOk" class="btn button" style="display: none;" type="submit">Subir archivo</button>';
 echo '</form>';
 

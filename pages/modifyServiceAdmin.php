@@ -96,13 +96,13 @@ echo '}';
 echo '</script>';
 
 // Entregar
-echo '<input type="button" value="Entregar" onclick="changeEstadoOculto(4)" class="btn button serviceModifySubmit addedMarginTop">';
+echo '<input type="button" value="Entregar" onclick="changeEstadoOculto(4)" class="btn button serviceModifySubmit addedMarginTop bootstrap icongeneric check">';
 
 // Aplazar
-echo '<input type="button" onclick="window.location.href = \'aplazarService.php?service=' . $service['id'] . '\'" value="Aplazar" class="btn button serviceModifySubmit addedMarginTop">';
+echo '<input type="button" onclick="window.location.href = \'aplazarService.php?service=' . $service['id'] . '\'" value="Aplazar" class="btn button serviceModifySubmit addedMarginTop bootstrap icongeneric delay">';
 
 // Rechazar
-echo '<input type="button" value="Rechazar" onclick="changeEstadoOculto(6)" class="btn button serviceModifySubmit addedMarginTop">';
+echo '<input type="button" value="Rechazar" onclick="changeEstadoOculto(6)" class="btn button serviceModifySubmit addedMarginTop bootstrap icongeneric cancel">';
 
 echo '<input type="submit" value="Actualizar" id="submitButton" class="btn button serviceModifySubmit admin addedMarginTop">';
 echo '</form>';
@@ -115,7 +115,7 @@ echo '<form id="uploadForm1" enctype="multipart/form-data" class="lineasFilter s
 echo '<input type="hidden" name="change" value="0">';
 echo '<input type="hidden" name="id" value="' . $service["id"] . '">';
 echo '<input class="inputfile" type="file" id="fileInput" name="file">';
-echo '<label class="btn button" for="fileInput" data-multiple-caption="{count} files selected" multiple >Subir archivo</label>';
+echo '<label class="btn button bootstrap icongeneric upload" for="fileInput" data-multiple-caption="{count} files selected" multiple >Subir archivo</label>';
 echo '<button id="submitBtnOk" class="btn button" style="display: none;" type="submit">Subir archivo</button>';
 echo '</form>';
 
@@ -125,7 +125,7 @@ echo '<input type="hidden" name="inc" value="1">';
 echo '<input type="hidden" name="change" value="0">';
 echo '<input type="hidden" name="id" value="' . $service["id"] . '">';
 echo '<input class="inputfile" type="file" id="fileInput2" name="file">';
-echo '<label class="btn button inc" for="fileInput2" data-multiple-caption="{count} files selected" multiple >Subir incidencia</label>';
+echo '<label class="btn button inc bootstrap icongeneric upload2" for="fileInput2" data-multiple-caption="{count} files selected" multiple >Subir incidencia</label>';
 echo '<button id="submitBtnInc" class="btn button" style="display: none;" type="submit">Subir incidencia</button>';
 echo '</form>';
 

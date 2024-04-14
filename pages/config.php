@@ -7,12 +7,31 @@ if (isset($userROL)) {
 	}
 } else header("location: ../index.php");
 
-actualizarSinAsignarAsignado();
-actualizarEstadosServicios();
-eliminarArchivosAntiguos();
+if (isset($_POST["estados"])) {
+	actualizarSinAsignarAsignado();
+	actualizarEstadosServicios();
+	notificacion("Estados actualizados.");
+} 
+if (isset($_POST["archivos"])) {
+	eliminarArchivosAntiguos();
+	notificacion("Archivos de más de 40 días eliminados.");
+}
+if (isset($_POST["registro"])) {
+	borrarLogAntiguo();
+	notificacion("Log de más de 40 días borrado.");
+}
 
 ?>
-<div method="post" class="lineasFilter">
+<form method="post" class="lineasFilter">
+	<input style="width: auto;" type="submit" value="Forzar actualización de estados" class="btn button" name="estados">
+</form>
+<form method="post" class="lineasFilter">
+	<input style="width: auto;" type="submit" value="Eliminar archivos de más de 40 días" class="btn button" name="archivos">
+</form>
+<form method="post" class="lineasFilter">
+	<input style="width: auto;" type="submit" value="Borrar entradas en el registro de más de 40 días" class="btn button" name="registro">
+</form>
+<div class="lineasFilter">
 	<p id="notificacion"></p>
 </div>
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" fill="cyan" class="bi bi-person-circle" viewBox="0 0 16 16">

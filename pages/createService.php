@@ -9,13 +9,16 @@ if (isset($_SESSION["rol"])) {
 	<input type="text" placeholder="Calle" class="calle btn input" name="calle" required>
 	<input type="text" placeholder="Población" class="btn input" name="poblacion" required>
 	<input type="text" placeholder="Teléfono" class="btn input" name="telf" required>
-	<input type="text" placeholder="Nota" class="btn input" name="nota" required>
-	<input type="date" name="date" class="btn input" required>
+	<input type="text" placeholder="Nota" class="btn input" name="nota">
 <?php
+    if (isset($_POST["create"])) echo '<input type="date" name="date" class="btn input" value="' . $_POST["date"] . '" required>';
+    else echo '<input type="date" name="date" class="btn input" required>';
+
 
 if ($userEmpresaID == $idValbea) {
 	echo '<select class="admin btn input" name="empresa" placeholder="Empresa" required>';
-	echo '<option value="">Empresa</option>';
+    if (isset($_POST['create'])) echo '<option value="' . $$_POST['empresa'] . '">' . getBy('name', 'empresas', 'id', $_POST['empresa']) . '</option>';
+    else echo '<option value="">Empresa</option>';
 	$empresas = getArrayEmpresas();
 	for ($i = 0; $i < count($empresas); $i++) {
 		echo '<option value="' . $empresas[$i]['id'] . '">' . $empresas[$i]['name'] . '</option>';
@@ -36,5 +39,31 @@ include_once "./footer.php";
 ?>
 <script>
 	document.getElementById("header-btn-cservice").classList.add("header-btn-selected");
+</script>
+<script>
+	// PEGADO DE DATOS DESDE EXCEL
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelector('.lineasFilter').addEventListener('paste', function (e) {
+            var clipboardData, pastedData;
+            // Accede a los datos del portapapeles
+            clipboardData = e.clipboardData || window.clipboardData;
+            pastedData = clipboardData.getData('Text');
+            // Divide los datos pegados en filas
+            var rows = pastedData.split('\n');
+            // Si hay 6 columnas, completa los campos del formulario
+            if (true) {
+                var columns = rows[0].split('\t');
+                document.querySelector('input[name="name"]').value = columns[0];
+                document.querySelector('input[name="calle"]').value = columns[1];
+                document.querySelector('input[name="poblacion"]').value = columns[2];
+                document.querySelector('input[name="telf"]').value = columns[3];
+                document.querySelector('input[name="nota"]').value = columns[4];
+            } else {
+                alert('Los datos pegados no tienen el formato esperado.');
+            }
+            e.preventDefault();
+        });
+    });
+</script>
 </script>
 </body>

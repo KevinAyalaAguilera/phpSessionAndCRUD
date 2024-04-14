@@ -218,8 +218,15 @@ function listServices()
 
         while ($row = mysqli_fetch_array($result)) {
             $idDesglosado = explode('-', $row[0]);
-            echo '<div class="lineaWrapper">';
-            echo '<div><a href="./modifyService.php?service=' . $row[0] . '">' . $row[1] . '-' . $idDesglosado[1] . '</a></div>';
+            if ($row[8] == 1) echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus sinasignar">';
+            else if ($row[8] == 2) echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus asignado">';
+            else if ($row[8] == 3) echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus enruta">';
+            else if ($row[8] == 4) echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus entregado">';
+            else if ($row[8] == 5) echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus aplazado">';
+            else if ($row[8] == 6) echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus rechazado">';
+            else if ($row[8] == 7) echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus cancelado">';
+            else echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus box">';
+            echo '<div><a class="hiperlink" href="./modifyService.php?service=' . $row[0] . '">' . $row[1] . '-' . $idDesglosado[1] . '</a></div>';
             echo '<div class="calle">' . $row[2] . '</div>';
             echo '<div>' . $row[3] . '</div>';
             echo '<div>' . $row[4] . '</div>';
@@ -253,7 +260,8 @@ function printFilterInputs()
 function printEmpresaSelect()
 {
     echo '<select class="btn input" name="filterEmpresa" placeholder="Empresa">';
-    echo '<option value="">Empresa</option>';
+    if (isset($_GET['filterEmpresa']) && $_GET['filterEmpresa'] != "") echo '<option value="' . $_GET['filterEmpresa'] . '">' . getBy('name', 'empresas', 'id', $_GET['filterEmpresa']) . '</option>';
+    else echo '<option value="">Empresa</option>';
     $empresas = getArrayEmpresasCliente();
     foreach ($empresas as $empresa) {
         echo '<option value="' . $empresa['id'] . '">' . $empresa['name'] . '</option>';
@@ -264,7 +272,8 @@ function printEmpresaSelect()
 function printUserSelect()
 {
     echo '<select class="btn input" name="filterUser" placeholder="Empleado">';
-    echo '<option value="">Empleado</option>';
+    if (isset($_GET['filterUser']) && $_GET['filterUser'] != "") echo '<option value="' . $_GET['filterUser'] . '">' . getBy('name', 'users', 'id', $_GET['filterUser']) . '</option>';
+    else echo '<option value="">Empleado</option>';
     $empleados = getArrayEmpleados();
     foreach ($empleados as $empleado) {
         echo '<option value="' . $empleado['id'] . '">' . $empleado['name'] . '</option>';
@@ -275,7 +284,8 @@ function printUserSelect()
 function printStatusSelect()
 {
     echo '<select class="btn input" name="filterStatus" placeholder="Estado">';
-    echo '<option value="">Estado</option>';
+    if (isset($_GET['filterStatus']) && $_GET['filterStatus'] != "") echo '<option value="' . $_GET['filterStatus'] . '">' . getBy('name', 'estados', 'id', $_GET['filterStatus']) . '</option>';
+    else echo '<option value="">Estado</option>';
     $estados = getArrayEstados();
     foreach ($estados as $estado) {
         echo '<option value="' . $estado['id'] . '">' . $estado['name'] . '</option>';
@@ -385,14 +395,14 @@ function listUsers()
     }
 
     echo '<div class="lineas">';
-    echo '<div class="lineaWrapper">';
+    echo '<div class="lineaWrapper soloDesktop lineaWrapper-th">';
     echo '<div>Usuario</div>';
     echo '<div>Rol</div>';
     echo '<div>Empresa</div>';
     echo '</div>';
     while ($row = mysqli_fetch_array($result)) {
         echo '<div class="lineaWrapper">';
-        echo '<div><a href="./modifyUser.php/?user=' . $row[0] . '">' . $row[1] . '</a></div>';
+        echo '<div><a class="hiperlink" href="./modifyUser.php/?user=' . $row[0] . '">' . $row[1] . '</a></div>';
         echo '<div>' . $row[3] . '</div>';
         echo '<div>' . $empresasArray[$row[4]] . '</div>';
         echo '</div>';
@@ -430,20 +440,53 @@ function createUser()
     }
 }
 
+function changePassword()
+{
+    if (isset($_POST["change_password"])) {
+        $user = $_POST["user"];
+        $oldPassword = $_POST["old_password"];
+        $newPassword = $_POST["old_password"];
+        // Verificar la autenticación del usuario con su contraseña actual
+        $conexion = connectDB();
+        $sql = "SELECT * FROM users WHERE name = ?";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("s", $user);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        if ($result->num_rows == 1) {
+            $row = $result->fetch_assoc();
+            if (password_verify($oldPassword, $row['pass'])) {
+                // La contraseña actual es correcta, proceder a cambiarla
+                $hashedNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+                $sql = "UPDATE users SET pass = ? WHERE name = ?";
+                $stmt = $conexion->prepare($sql);
+                $stmt->bind_param("ss", $hashedNewPassword, $user);
+                $stmt->execute();
+                insertarLog('Cambio de contraseña para el usuario ' . $user . '.', $conexion);
+                notificacion('Contraseña cambiada exitosamente.');
+            } else {
+                notificacion('La contraseña actual es incorrecta.');
+            }
+        } else {
+            notificacion('Usuario no encontrado.');
+        }
+    }
+}
+
 function listEmpresas()
 {
     $conexion = connectDB();
     $sql = "SELECT * FROM Empresas";
     $result = $conexion->query($sql);
     echo '<div class="lineas">';
-    echo '<div class="lineaWrapper">';
+    echo '<div class="lineaWrapper soloDesktop lineaWrapper-th">';
     echo '<div>Empresa</div>';
     echo '<div>Cif</div>';
     echo '<div>Dirección</div>';
     echo '</div>';
     while ($row = mysqli_fetch_array($result)) {
         echo '<div class="lineaWrapper">';
-        echo '<div><a href="./modifyEmpresa.php/?empresa=' . $row[3] . '">' . $row[1] . '</a></div>';
+        echo '<div><a class="hiperlink" href="./modifyEmpresa.php/?empresa=' . $row[3] . '">' . $row[1] . '</a></div>';
         echo '<div>' . $row[3] . '</div>';
         echo '<div>' . $row[2] . '</div>';
         echo '</div>';
@@ -511,7 +554,7 @@ function listLog()
     $result = $conexion->query($sql);
 
     echo '<div class="lineas">';
-    echo '<div class="lineaWrapper">';
+    echo '<div class="lineaWrapper soloDesktop lineaWrapper-th">';
     echo '<div>Fecha y hora</div>';
     echo '<div>Usuario</div>';
     echo '<div>Acción</div>';
@@ -975,6 +1018,20 @@ function eliminarArchivosAntiguos()
 
     // Eliminar registros de la base de datos
     $stmt_delete = $conexion->prepare("DELETE FROM archivos WHERE date < ?");
+    $stmt_delete->bind_param("s", $fecha_limite);
+    $stmt_delete->execute();
+    $stmt_delete->close();
+
+    // Cerrar conexión a la base de datos
+    $conexion->close();
+}
+
+function borrarLogAntiguo() {
+    $conexion = connectDB();
+    $fecha_limite = date('Y-m-d', strtotime('-40 days'));
+
+    // Eliminar registros de la base de datos
+    $stmt_delete = $conexion->prepare("DELETE FROM log WHERE datetime < ?");
     $stmt_delete->bind_param("s", $fecha_limite);
     $stmt_delete->execute();
     $stmt_delete->close();
