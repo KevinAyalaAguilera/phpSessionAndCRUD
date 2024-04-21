@@ -37,6 +37,7 @@ if (isset($userROL)) {
 		<p><span>Además, nuestra <b style="font-size: inherit;">división de servicios de renovación de hogares</b> se dedica a mejorar los ambientes tanto en el interior como en el exterior de los hogares, lo que demuestra nuestra versatilidad y compromiso en ofrecer soluciones integrales a nuestros clientes.</span></p>
 		<p><span>En Grupo Valbea, estamos comprometidos en ofrecer un servicio seguro y confiable a nuestros clientes.</span></p>
 		<p><span><b style="font-size: inherit;">¡Gracias por elegirnos!</b></span></p>
+		<p><span><a class="frontpage-link" href="./privacy.php">Política de privacidad y cookies</a></span></p>
 	</div>
 </div>
 
