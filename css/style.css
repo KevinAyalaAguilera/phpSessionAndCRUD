@@ -101,6 +101,11 @@ label,
     transition: 300ms;
 }
 
+.button.danger:hover {
+    box-shadow: rgb(255, 0, 0) 0px 10px 30px -10px;
+    transition: 300ms;
+}
+
 .button:active {
     transform: translateY(0.4em);
     transition: 100ms;
@@ -110,7 +115,8 @@ label,
 .input {
     background-color: rgb(245, 250, 255);
     color: rgb(0, 0, 5);
-
+    text-align: left;
+    padding-left: 0.5em;
 }
 
 .button {
@@ -123,9 +129,15 @@ label,
     background-color: rgb(247, 114, 13);
 }
 
+.button.danger {
+    background-color: rgb(255, 0, 0);
+}
+
 label {
     background-color: rgb(243, 243, 243);
     border: 0px;
+    text-align: left;
+    padding-left: 0.5em;
 }
 
 .btn.button.header-btn-selected {

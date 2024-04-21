@@ -4,6 +4,10 @@ if (!isset($userROL)) {
     header("location: ../index.php");
     exit();
 }
+if (!isset($service)) {
+    header("location: ../index.php");
+    exit();
+}
 
 modifyServiceByUser();
 echo '<form method="POST" class="serviceModify grid">';

@@ -399,12 +399,18 @@ function listUsers()
     echo '<div>Usuario</div>';
     echo '<div>Rol</div>';
     echo '<div>Empresa</div>';
+    echo '<div>Acciones</div>';
     echo '</div>';
     while ($row = mysqli_fetch_array($result)) {
         echo '<div class="lineaWrapper">';
-        echo '<div><a class="hiperlink" href="./modifyUser.php/?user=' . $row[0] . '">' . $row[1] . '</a></div>';
+        echo '<div>' . $row[1] . '</div>';
         echo '<div>' . $row[3] . '</div>';
         echo '<div>' . $empresasArray[$row[4]] . '</div>';
+        echo '<div><form method="post">';
+        echo '<input type="hidden" value="' . $row[0] . '" name="user">';
+        echo '<input type="submit" class="btn button danger" value="Eliminar" name="userEliminar">';
+        echo '</form>';
+        echo '</div>';
         echo '</div>';
         echo '<div class="separador"></div>';
     }
@@ -483,12 +489,18 @@ function listEmpresas()
     echo '<div>Empresa</div>';
     echo '<div>Cif</div>';
     echo '<div>Dirección</div>';
+    echo '<div>Acciones</div>';
     echo '</div>';
     while ($row = mysqli_fetch_array($result)) {
         echo '<div class="lineaWrapper">';
-        echo '<div><a class="hiperlink" href="./modifyEmpresa.php/?empresa=' . $row[3] . '">' . $row[1] . '</a></div>';
+        echo '<div>' . $row[1] . '</div>';
         echo '<div>' . $row[3] . '</div>';
         echo '<div>' . $row[2] . '</div>';
+        echo '<div><form method="post">';
+        echo '<input type="hidden" value="' . $row[0] . '" name="empresa">';
+        echo '<input type="submit" class="btn button danger" value="Eliminar" name="empresaEliminar">';
+        echo '</form>';
+        echo '</div>';
         echo '</div>';
         echo '<div class="separador"></div>';
     }
@@ -645,6 +657,7 @@ function modifyService()
         }
 
         actualizarSinAsignarAsignado();
+        actualizarEstadosServicios();
     }
 }
 

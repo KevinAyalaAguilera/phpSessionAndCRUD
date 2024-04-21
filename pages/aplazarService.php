@@ -1,8 +1,10 @@
 <?php
 include_once "../controller/controller.php";
-if (isset($userROL)) {
+if (isset($_SESSION["rol"])) {
 	include_once "./header.php";
-} else if ($userEmpresaID != $idValbea) {
+} else header("location: ../index.php");
+
+if ($userEmpresaID != $idValbea) {
 	header("location: ../index.php");
 	exit();
 }

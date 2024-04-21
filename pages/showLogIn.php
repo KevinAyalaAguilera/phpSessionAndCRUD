@@ -69,3 +69,26 @@ if (isset($userROL)) {
 	</div>
 </div>
 
+<?php
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Obtener los datos del formulario
+    $nombre = $_POST['user'];
+    $origen = $_POST['origin'];
+    $mensaje = $_POST['message'];
+    
+    // Configurar el correo electrónico
+    $destinatario = "kevin.ayala.aguilera@gmail.com";
+    $asunto = "Nuevo mensaje de contacto desde tu sitio web";
+    $contenido = "Nombre: $nombre\n";
+    $contenido .= "Origen: $origen\n";
+    $contenido .= "Mensaje:\n$mensaje\n";
+    $cabeceras = "From: $origen";
+    
+    // Enviar el correo electrónico
+    if (mail($destinatario, $asunto, $contenido, $cabeceras)) {
+        echo "<p id='notificacion'>¡El mensaje ha sido enviado correctamente!</p>";
+    } else {
+        echo "<p id='notificacion'>Hubo un error al enviar el mensaje. Por favor, inténtalo de nuevo más tarde.</p>";
+    }
+}
+?>
