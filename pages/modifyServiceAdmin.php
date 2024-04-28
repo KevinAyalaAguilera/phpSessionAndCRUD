@@ -78,8 +78,15 @@ if ($service['incidencia'] == 1) {
 }
 
 // Nota Interna
-echo '<label for="comentarioInterno" class="addedMargin"><b>Nota interna:</b></label>';
-echo '<textarea class="btn input" id="comentarioInterno" name="comentarioInterno">' . $service['comentarioInterno'] . '</textarea>';
+if ($_SESSION['rol'] == "superadmin") {
+    echo '<label for="comentarioInterno" class="addedMargin"><b>Nota interna:</b></label>';
+    echo '<textarea class="btn input" id="comentarioInterno" name="comentarioInterno">' . $service['comentarioInterno'] . '</textarea>';
+} 
+else {
+    echo '<input type="hidden" id="comentarioInterno" name="comentarioInterno" value="' . $service['comentarioInterno'] . '"></input>';
+    echo '<div class="separadorInvisible"></div>';
+    echo '<div class="separadorInvisible"></div>';
+} 
 
 // Nota Externa
 echo '<label for="comentarioExterno" class="addedMargin"><b>Nota externa:</b></label>';

@@ -152,7 +152,7 @@ function listServices()
             $queryEmpty = false;
         }
 
-        // SI LA EMPRESA DEL USER NO ES VALBEA, FILTRAMOS POR SU EMPRESA
+        // Si la empresa del user no es valbea, filtramos por su empresa para no mostrar servicios de otras empresas
         if ($userEmpresaID != $idValbea) {
             $filterEmpresa = $userEmpresaID;
         } else if (!empty($_GET["filterEmpresa"])) {
@@ -178,7 +178,7 @@ function listServices()
 
 
 
-        // SI ES "USER" DE VALBEA, MUESTRA SOLO SUS SERVICIOS DE HOY
+        // Si es user de valbea, solo muestra lo de hoy suyo
         if ($userEmpresaID == $idValbea && $userROL == "user") {
             $sql .= " AND fechaServicio = '" . date('Y-m-d') . "'";
             $sql .= " AND asignadoA = '" . $userID . "'";
@@ -211,7 +211,7 @@ function listServices()
         echo '<div>Asignado a</div>';
         if ($userEmpresaID == $idValbea) echo '<div>Empresa</div>';
         echo '<div>Estado</div>';
-        if ($userEmpresaID == $idValbea && ($userROL == 'admin' || $userROL == 'superadmin')) echo '<div>Nota interna</div>';
+        if ($userEmpresaID == $idValbea && $userROL == "superadmin") echo '<div>Nota interna</div>';
         echo '<div>Nota</div>';
         echo '</div>';
         echo '<div class="separador soloDesktop"></div>';
@@ -251,7 +251,7 @@ function listServices()
             echo '</div>';
 
             // nota interna
-            if ($userEmpresaID == $idValbea && ($userROL == "superadmin" || $userROL == "admin")) echo '<div class="soloDesktop">' . $row[11] . '</div>';
+            if ($userEmpresaID == $idValbea && $userROL == "superadmin") echo '<div class="soloDesktop">' . $row[11] . '</div>';
 
             // nota externa
             echo '<div class="soloDesktop">' . $row[12] . '</div>';
@@ -272,7 +272,6 @@ function listServices()
 function printFilterInputs()
 {
     echo '<form method="get" class="lineasFilter">';
-    //echo '<h3>Lista de servicios</h3>';
     if (isset($_GET['filterMain'])) echo '<input class="btn input" value="' . $_GET['filterMain'] . '" type="text" name="filterMain" placeholder="Buscar..">';
     else echo '<input class="btn input" type="text" name="filterMain" placeholder="Buscar...">';
 }
@@ -578,7 +577,6 @@ function listEmpresas()
 
 function createEmpresa()
 {
-    // FALTA COMPROBAR QUE CIF ES ÚNICO
     if (isset($_POST["createEmpresa"])) {
         $sql = "SELECT * FROM empresas";
         $conexion = connectDB();
@@ -1002,12 +1000,15 @@ function insertarLog($accion, $conn)
 function generarID()
 {
     $caracteres = '123456789';
-    $caracteres2 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $caracteres2 = 'BCDFGHJKLMNPQRSTVWXYZ';
+    $caracteres3 = 'AEIOU';
     $longitud = 4;
     $id = '';
-    for ($i = 0; $i < $longitud; $i++) {
-        $id .= $caracteres2[rand(0, strlen($caracteres2) - 1)];
-    }
+    $id .= $caracteres2[rand(0, strlen($caracteres2) - 1)];
+    $id .= $caracteres3[rand(0, strlen($caracteres3) - 1)];
+    $id .= $caracteres2[rand(0, strlen($caracteres2) - 1)];
+    $id .= $caracteres3[rand(0, strlen($caracteres3) - 1)];
+
     for ($i = 0; $i < $longitud; $i++) {
         $id .= $caracteres[rand(0, strlen($caracteres) - 1)];
     }

@@ -2,9 +2,13 @@
 include_once "../controller/controller.php";
 if (isset($_SESSION["rol"])) {
 	include_once "./header.php";
-} else header("location: ../index.php");
+} else {
+    header("location: ../index.php");
+	exit();
+}
 if ($_SESSION['userId'] != $_GET['id']) {
     header("location: ../index.php");
+	exit();
 }
 ?>
 <form method="post" class="lineasFilter">

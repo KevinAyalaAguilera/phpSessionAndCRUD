@@ -18,12 +18,7 @@ include_once "./header.php";
 
 <a class="frontpage-right-btn" href="#first-cascade-wrapper" style="margin-top: 75vh;">^</a>
 
-<!-- <img class="frontpage soloMovil main-background" src="../img/pexels/pexels-photo-5025494.jpeg"> -->
-<!-- <img class="frontpage soloDesktop main-background" src="../img/pexels/pexels-photo-4391470.jpeg"> -->
-
 <div class="cascade-wrapper first" id="first-cascade-wrapper">
-	<!-- <img class="frontpage soloMovil" src="../img/pexels/pexels-photo-5025494.jpeg"> -->
-	<!-- <img class="frontpage soloDesktop" src="../img/pexels/pexels-photo-4391470.jpeg"> -->
 	<div class="frontpage-textblock">
 
 		<p><br>Última actualización: 25 de septiembre de 2023</p>

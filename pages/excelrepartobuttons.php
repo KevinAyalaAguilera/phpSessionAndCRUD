@@ -1,4 +1,3 @@
-
 <script>
 	document.getElementById("descargarCSV").addEventListener("click", function() {
 		// Realizar la solicitud AJAX al servidor PHP

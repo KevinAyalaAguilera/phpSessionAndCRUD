@@ -2,8 +2,10 @@
 include_once "../controller/controller.php";
 if (isset($_SESSION["rol"])) {
 	include_once "./header.php";
-} else header("location: ../index.php");
-
+} else {
+	header("location: ../index.php");
+    exit();
+}
 
 listServices();
 include_once "./footer.php";

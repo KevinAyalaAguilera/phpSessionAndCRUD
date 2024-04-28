@@ -1,24 +1,28 @@
 <?php
-	include_once "../controller/controller.php";
-	if (isset($userROL)) {
-		include_once "./header.php";
-		if ($userROL != "superadmin") {
-			header("location: ../index.php");
-		}
-	} else header("location: ../index.php");
-
-	if (isset($_POST['userEliminar'])) {
-		$userEliminado = $_POST['userEliminar'];
-		$conexion = connectDB();
-
-		$stmt_delete = $conexion->prepare("DELETE FROM users WHERE id = ?");
-		$stmt_delete->bind_param("i", $userEliminado);
-		$stmt_delete->execute();
-		$stmt_delete->close();
-
-		$conexion->close();
-		notificacion("Usuario eliminado correctamente.");
+include_once "../controller/controller.php";
+if (isset($userROL)) {
+	include_once "./header.php";
+	if ($userROL != "superadmin") {
+		header("location: ../index.php");
+		exit();
 	}
+} else {
+	header("location: ../index.php");
+	exit();
+}
+
+if (isset($_POST['userEliminar'])) {
+	$userEliminado = $_POST['userEliminar'];
+	$conexion = connectDB();
+
+	$stmt_delete = $conexion->prepare("DELETE FROM users WHERE id = ?");
+	$stmt_delete->bind_param("i", $userEliminado);
+	$stmt_delete->execute();
+	$stmt_delete->close();
+
+	$conexion->close();
+	notificacion("Usuario eliminado correctamente.");
+}
 
 ?>
 <form method="post" class="lineasFilter">
@@ -43,11 +47,11 @@
 	<p id="notificacion"></p>
 </form>
 <?php
-	if (isset($_POST['create'])) {
-		createUser();
-	}
-	listUsers();
-	include_once "./footer.php";
+if (isset($_POST['create'])) {
+	createUser();
+}
+listUsers();
+include_once "./footer.php";
 ?>
 <script>
 	document.getElementById("header-btn-cuser").classList.add("header-btn-selected")

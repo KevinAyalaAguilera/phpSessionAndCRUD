@@ -334,6 +334,33 @@ input[type=checkbox] {
     align-items: center;
 }
 
+#createServicesFormulary {
+    display: flex;
+    flex-direction: column;
+}
+#createServicesFormularyHeader {
+    display: flex;
+    flex-direction: column;
+}
+#createServicesFormulary > .service-inputs {
+    display: flex;
+    flex-direction: column;
+}
+
+@media screen and (min-width: 1200px) {
+    #createServicesFormulary {
+        flex-direction: column;
+    }
+
+    #createServicesFormularyHeader {
+        flex-direction: row;
+    }
+
+    #createServicesFormulary > .service-inputs {
+        flex-direction: row;
+    }
+}
+
 
 
 /* ----------------------------------------------------------- */

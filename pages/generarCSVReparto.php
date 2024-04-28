@@ -1,6 +1,9 @@
 <?php
 include_once "../controller/controller.php";
-if (!isset($_SESSION["rol"])) header("location: ../index.php");
+if (!isset($_SESSION["rol"])) {
+    header("location: ../index.php");
+    exit();
+}
 
 // Ejemplo de datos ficticios
 $datos = $_SESSION['excel'];

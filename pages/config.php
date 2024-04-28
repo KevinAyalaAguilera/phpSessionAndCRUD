@@ -4,14 +4,18 @@ if (isset($userROL)) {
 	include_once "./header.php";
 	if ($userROL != "superadmin") {
 		header("location: ../index.php");
+		exit();
 	}
-} else header("location: ../index.php");
+} else {
+	header("location: ../index.php");
+	exit();
+}
 
 if (isset($_POST["estados"])) {
 	actualizarSinAsignarAsignado();
 	actualizarEstadosServicios();
 	notificacion("Estados actualizados.");
-} 
+}
 if (isset($_POST["archivos"])) {
 	eliminarArchivosAntiguos();
 	notificacion("Archivos de más de 40 días eliminados.");

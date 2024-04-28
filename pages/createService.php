@@ -7,8 +7,8 @@ if (isset($_SESSION["rol"])) {
     exit();
 }
 ?>
-<form method="post" class="lineasFilter" style="display: flex; flex-direction: column">
-    <div style="display: flex; flex-direction: row">
+<form method="post" class="lineasFilter" id="createServicesFormulary">
+    <div id="createServicesFormularyHeader">
         <?php if ($userEmpresaID == $idValbea) : ?>
             <select class="admin btn input" name="empresa" placeholder="Empresa" required>
                 <?php if (isset($_POST['create'])) : ?>

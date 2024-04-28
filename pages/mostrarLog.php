@@ -6,8 +6,12 @@
 
 		} else {
 			header("location: ../index.php");
+			exit();
 		}
-	} else header("location: ../index.php");
+	} else {
+		header("location: ../index.php");
+		exit();
+	}
 ?>
 <div method="post" class="lineasFilter">
 	<p id="notificacion"></p>

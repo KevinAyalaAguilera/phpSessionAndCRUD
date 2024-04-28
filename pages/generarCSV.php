@@ -1,6 +1,9 @@
 <?php
 include_once "../controller/controller.php";
-if (!isset($_SESSION["rol"])) header("location: ../index.php");
+if (!isset($_SESSION["rol"])) {
+    header("location: ../index.php");
+    exit();
+}
 
 // Ejemplo de datos ficticios
 $datos = $_SESSION['excel'];
@@ -13,7 +16,7 @@ foreach ($datos as $fila) {
 	$fila['idEmpresa'] = getBy('name', 'empresas', 'id', $fila['idEmpresa']);
 	if ($fila['incidencia'] == 0) $fila['incidencia'] = '';
 	else $fila['incidencia'] == 'SI';
-	if ($userEmpresaID != 1) $fila['comentarioInterno'] = '';
+	if ($userEmpresaID != 1 || $_SESSION['rol'] != "superadmin") $fila['comentarioInterno'] = '';
     $csv_content .= implode(',', $fila) . "\n";
 }
 
