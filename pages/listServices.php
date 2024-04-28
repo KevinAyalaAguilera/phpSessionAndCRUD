@@ -7,6 +7,7 @@ if (isset($_SESSION["rol"])) {
 
 listServices();
 include_once "./footer.php";
+//include_once "./debugger.php";
 include_once "./excelrepartobuttons.php";
 
 ?>

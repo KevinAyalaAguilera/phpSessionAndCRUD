@@ -69,16 +69,21 @@ for ($i = 0; $i < count($empleados); $i++) {
 echo '</select>';
 
 // Incidencia
-echo '<label for="incidencia" class="addedMargin"><b>Incidencia:</b></label>';
-echo '<input class="checkbox" type="checkbox" id="incidencia" name="incidencia" ' . (($service['incidencia'] == 1) ? 'checked' : '') . '>';
+if ($service['incidencia'] == 1) {
+    echo '<label class="soloDesktop addedMargin" for="incidencia"><b>Incidencia:</b></label>';
+    echo '<label class="soloDesktop btn-icon" for="incidencia"><b>Sí</b></label>';
+} else {
+    echo '<label class="soloDesktop addedMargin" for="incidencia"><b>Incidencia:</b></label>';
+    echo '<label class="soloDesktop" for="incidencia"><b>No</b></label>';
+}
 
 // Nota Interna
 echo '<label for="comentarioInterno" class="addedMargin"><b>Nota interna:</b></label>';
-echo '<input class="btn input" type="text" id="comentarioInterno" name="comentarioInterno" value="' . $service['comentarioInterno'] . '">';
+echo '<textarea class="btn input" id="comentarioInterno" name="comentarioInterno">' . $service['comentarioInterno'] . '</textarea>';
 
 // Nota Externa
 echo '<label for="comentarioExterno" class="addedMargin"><b>Nota externa:</b></label>';
-echo '<input class="btn input" type="text" id="comentarioExterno" name="comentarioExterno" value="' . $service['comentarioExterno'] . '">';
+echo '<textarea class="btn input" id="comentarioExterno" name="comentarioExterno">' . $service['comentarioExterno'] . '</textarea>';
 
 echo '<div class="separadorInvisible"></div>';
 echo '<div class="separadorInvisible"></div>';

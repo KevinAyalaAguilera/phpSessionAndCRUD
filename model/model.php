@@ -127,7 +127,7 @@ function listServices()
         $conexion = connectDB();
 
         // Construir la consulta base
-        $sql = "SELECT * FROM Services WHERE 1=1";
+        $sql = "SELECT * FROM services WHERE 1=1";
         $queryEmpty = true;
 
         // Aplicar filtros si se han enviado
@@ -211,38 +211,58 @@ function listServices()
         echo '<div>Asignado a</div>';
         if ($userEmpresaID == $idValbea) echo '<div>Empresa</div>';
         echo '<div>Estado</div>';
-        if ($userEmpresaID == $idValbea) echo '<div>Nota interna</div>';
+        if ($userEmpresaID == $idValbea && ($userROL == 'admin' || $userROL == 'superadmin')) echo '<div>Nota interna</div>';
         echo '<div>Nota</div>';
         echo '</div>';
         echo '<div class="separador soloDesktop"></div>';
 
         while ($row = mysqli_fetch_array($result)) {
             $idDesglosado = explode('-', $row[0]);
-            if ($row[8] == 1) echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus sinasignar">';
-            else if ($row[8] == 2) echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus asignado">';
-            else if ($row[8] == 3) echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus enruta">';
-            else if ($row[8] == 4) echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus entregado">';
-            else if ($row[8] == 5) echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus aplazado">';
-            else if ($row[8] == 6) echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus rechazado">';
-            else if ($row[8] == 7) echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus cancelado">';
-            else echo '<div class="lineaWrapper bootstrap icongeneric servicebackgroundstatus box">';
-            echo '<div><a class="hiperlink" href="./modifyService.php?service=' . $row[0] . '">' . $row[1] . '-' . $idDesglosado[1] . '</a></div>';
+
+            echo '<a class="hiperlink" href="./modifyService.php?service=' . $row[0] . '"><div class="lineaWrapper bootstrap icongeneric">';
+            // id
+            echo '<div>' . $row[1] . '-' . $idDesglosado[1] . '</div>';
+            // calle
             echo '<div class="calle">' . $row[2] . '</div>';
+            // población
             echo '<div>' . $row[3] . '</div>';
+            // telf
             echo '<div>' . $row[4] . '</div>';
+            // fecha
             echo '<div class="soloDesktop">' . date("d-m-Y", strtotime($row[5])) . '</div>';
+            // user
             echo '<div class="soloDesktop">' . getBy('name', 'users', 'id', $row[9]) . '</div>';
+
+            // empresa
             if ($userEmpresaID == $idValbea) echo '<div class="soloDesktop">' . getBy('name', 'empresas', 'id', $row[7]) . '</div>';
-            echo '<div class="soloDesktop">' . getBy('name', 'estados', 'id', $row[8]) . '</div>';
-            if ($userEmpresaID == $idValbea) echo '<div class="soloDesktop">' . $row[11] . '</div>';
-            echo '<div class="soloDesktop">' . $row[12] . '</div>';
+
+            // status
+            echo '<div id="statusWrapper">';
+            if ($row[8] == 1) echo '<div class="bootstrap icongeneric servicebackgroundstatus sinasignar">';
+            else if ($row[8] == 2) echo '<div class="bootstrap icongeneric servicebackgroundstatus asignado">';
+            else if ($row[8] == 3) echo '<div class="bootstrap icongeneric servicebackgroundstatus enruta">';
+            else if ($row[8] == 4) echo '<div class="bootstrap icongeneric servicebackgroundstatus entregado">';
+            else if ($row[8] == 5) echo '<div class="bootstrap icongeneric servicebackgroundstatus aplazado">';
+            else if ($row[8] == 6) echo '<div class="bootstrap icongeneric servicebackgroundstatus rechazado">';
+            else if ($row[8] == 7) echo '<div class="bootstrap icongeneric servicebackgroundstatus cancelado">';
+            else echo '<div class="bootstrap icongeneric servicebackgroundstatus box">';
             echo '</div>';
+            echo getBy('name', 'estados', 'id', $row[8]);
+            echo '</div>';
+
+            // nota interna
+            if ($userEmpresaID == $idValbea && ($userROL == "superadmin" || $userROL == "admin")) echo '<div class="soloDesktop">' . $row[11] . '</div>';
+
+            // nota externa
+            echo '<div class="soloDesktop">' . $row[12] . '</div>';
+
+            echo '</div></a>';
             echo '<div class="separador"></div>';
         }
 
         echo '</div>';
 
-        $sqlCount = "SELECT COUNT(*) AS total FROM Services";
+        $sqlCount = "SELECT COUNT(*) AS total FROM services";
         $resultCount = $conexion->query($sqlCount);
         $rowCount = mysqli_fetch_assoc($resultCount);
     }
@@ -320,39 +340,62 @@ function printSearchButton()
 
 function createService()
 {
+
     if (isset($_POST["create"])) {
         $conexion = connectDB();
+        $existingIds = obtenerExistingIds($conexion); // Función para obtener IDs existentes
 
-        // Preparar la consulta para verificar IDs existentes
-        $sql = "SELECT id FROM Services";
-        $result = $conexion->query($sql);
-        $existingIds = array();
-        while ($row = $result->fetch_assoc()) {
-            $existingIds[] = $row['id'];
-        }
+        // Obtener los valores de "date" y "empresa" del primer servicio
+        $date = isset($_POST["date"]) ? $_POST["date"] : '';
+        $empresa = isset($_POST["empresa"]) ? $_POST["empresa"] : '';
 
-        do {
+        // Iterar sobre los datos del formulario
+        foreach ($_POST["services"] as $service) {
+            // Generar un ID único para cada servicio
             $id = generarID();
-            $fecha = DateTime::createFromFormat('Y-m-d', $_POST["date"]); // Convertir a objeto DateTime
+
+            // Si el ID ya existe, genera uno nuevo hasta que obtengas un ID único
+            while (in_array($id, $existingIds)) {
+                $id = generarID();
+            }
+            
+            $fecha = DateTime::createFromFormat('Y-m-d', $date); // Convertir a objeto DateTime
             $id = $fecha->format("Y") . $fecha->format("m") . $fecha->format("d") . '-' . $id; // Formatear la fecha correctamente
-        } while (in_array($id, $existingIds));
 
-        // Insertar el servicio utilizando una consulta preparada
-        $stmt = $conexion->prepare("INSERT INTO Services (id, nombreCliente, calleCliente, poblacionCliente, telefonoCliente, comentarioExterno, fechaServicio, idEmpresa, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)");
-        $stmt->bind_param("ssssssss", $id, $_POST["name"], $_POST["calle"], $_POST["poblacion"], $_POST["telf"], $_POST["nota"], $_POST["date"], $_POST["empresa"]);
+            // Insertar el servicio utilizando una consulta preparada
+            $stmt = $conexion->prepare("INSERT INTO services (id, nombreCliente, calleCliente, poblacionCliente, telefonoCliente, comentarioExterno, fechaServicio, idEmpresa, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1)");
+            $stmt->bind_param("ssssssss", $id, $service["name"], $service["calle"], $service["poblacion"], $service["telf"], $service["nota"], $date, $empresa);
 
-        if ($stmt->execute()) {
-            notificacion('Servicio creado con éxito.');
-            insertarLog('Crea servicio ' . $id . '.', $conexion);
-        } else {
-            notificacion('Error al crear el servicio.');
+            if ($stmt->execute()) {
+                notificacion('Servicio creado con éxito.');
+                insertarLog('Crea servicio ' . $id . '.', $conexion);
+            } else {
+                notificacion('Error al crear el servicio.');
+            }
+
+            // Agregar el ID generado a la lista de IDs existentes
+            $existingIds[] = $id;
+
+            // Cerrar la consulta preparada
+            $stmt->close();
         }
 
         // Cerrar la conexión y liberar recursos
-        $stmt->close();
         $conexion->close();
     }
 }
+
+function obtenerExistingIds($conexion) {
+    // Preparar la consulta para verificar IDs existentes
+    $sql = "SELECT id FROM services";
+    $result = $conexion->query($sql);
+    $existingIds = array();
+    while ($row = $result->fetch_assoc()) {
+        $existingIds[] = $row['id'];
+    }
+    return $existingIds;
+}
+
 
 function getServiceById($id)
 {
@@ -363,7 +406,7 @@ function getServiceById($id)
     $id = mysqli_real_escape_string($conexion, $id);
 
     // Consulta SQL para obtener los datos del servicio por ID
-    $sql = "SELECT * FROM Services WHERE id = '$id'";
+    $sql = "SELECT * FROM services WHERE id = '$id'";
 
     // Ejecutar la consulta
     $result = $conexion->query($sql);
@@ -381,8 +424,15 @@ function getServiceById($id)
 
 function listUsers()
 {
-    $conexion = connectDB();
+    echo '<script>';
+    echo 'function confirmarEliminar(id) {';
+    echo '    if (confirm("¿Está seguro de que desea eliminar este usuario?")) {';
+    echo '        document.getElementById("eliminarForm-" + id).submit();';
+    echo '    }';
+    echo '}';
+    echo '</script>';
 
+    $conexion = connectDB();
     $sql = "SELECT * FROM users";
     $result = $conexion->query($sql);
 
@@ -406,9 +456,14 @@ function listUsers()
         echo '<div>' . $row[1] . '</div>';
         echo '<div>' . $row[3] . '</div>';
         echo '<div>' . $empresasArray[$row[4]] . '</div>';
-        echo '<div><form method="post">';
-        echo '<input type="hidden" value="' . $row[0] . '" name="user">';
-        echo '<input type="submit" class="btn button danger" value="Eliminar" name="userEliminar">';
+        
+        echo '<div>';
+        echo '<form id="eliminarForm-' . $row[0] . '" method="post">';
+        if ($row[0] != 13) {
+            echo '<input type="hidden" value="' . $row[0] . '" name="userEliminar">';
+            echo '<button type="button" class="btn button danger" onclick="confirmarEliminar(' . $row[0] . ')">Eliminar</button>';
+        } 
+        else echo '';
         echo '</form>';
         echo '</div>';
         echo '</div>';
@@ -451,7 +506,7 @@ function changePassword()
     if (isset($_POST["change_password"])) {
         $user = $_POST["user"];
         $oldPassword = $_POST["old_password"];
-        $newPassword = $_POST["old_password"];
+        $newPassword = $_POST["new_password"];
         // Verificar la autenticación del usuario con su contraseña actual
         $conexion = connectDB();
         $sql = "SELECT * FROM users WHERE name = ?";
@@ -481,8 +536,16 @@ function changePassword()
 
 function listEmpresas()
 {
+    echo '<script>';
+    echo 'function confirmarEliminar(id) {';
+    echo '    if (confirm("¿Está seguro de que desea eliminar esta empresa?")) {';
+    echo '        document.getElementById("eliminarForm-" + id).submit();';
+    echo '    }';
+    echo '}';
+    echo '</script>';
+
     $conexion = connectDB();
-    $sql = "SELECT * FROM Empresas";
+    $sql = "SELECT * FROM empresas";
     $result = $conexion->query($sql);
     echo '<div class="lineas">';
     echo '<div class="lineaWrapper soloDesktop lineaWrapper-th">';
@@ -496,10 +559,16 @@ function listEmpresas()
         echo '<div>' . $row[1] . '</div>';
         echo '<div>' . $row[3] . '</div>';
         echo '<div>' . $row[2] . '</div>';
-        echo '<div><form method="post">';
-        echo '<input type="hidden" value="' . $row[0] . '" name="empresa">';
-        echo '<input type="submit" class="btn button danger" value="Eliminar" name="empresaEliminar">';
+
+        echo '<div>';
+        echo '<form id="eliminarForm-' . $row[0] . '" method="post">';
+        if ($row[0] != 1) {
+            echo '<input type="hidden" value="' . $row[0] . '" name="empresaEliminar">';
+            echo '<button type="button" class="btn button danger" onclick="confirmarEliminar(' . $row[0] . ')">Eliminar</button>';
+        } 
+        else echo '';
         echo '</form>';
+
         echo '</div>';
         echo '</div>';
         echo '<div class="separador"></div>';
@@ -586,12 +655,12 @@ function deleteService()
 {
     if (isset($_POST["delete"])) {
         if (isset($_POST["id"])) {
-            $sql = "DELETE FROM Services WHERE id = " . $_POST["id"] . ";";
+            $sql = "DELETE FROM services WHERE id = " . $_POST["id"] . ";";
             $conexion = connectDB();
             $conexion->query($sql);
         }
     }
-    $sql = "SELECT * FROM Services;";
+    $sql = "SELECT * FROM services;";
     $conexion = connectDB();
     $result = $conexion->query($sql);
     echo '<table><tr><th>ID</th><th>name</th><th>category</th><th>price</th><th>origin</th><th></th></tr>';
@@ -633,32 +702,54 @@ function modifyService()
 
         if ($_POST['BTNestado'] != 0) $estado = $_POST['BTNestado'];
 
-        notificacion($id . " actualizado.");
-
+        // Establecer conexión a la base de datos
         $conexion = connectDB();
 
-        $sql = "UPDATE Services SET nombreCliente=?, calleCliente=?, poblacionCliente=?, telefonoCliente=?, horaRealizacion=?, idEmpresa=?, estado=?, asignadoA=?, incidencia=?, comentarioInterno=?, comentarioExterno=? WHERE id=?";
+        // Actualizar los datos del servicio
+        $sql = "UPDATE services SET nombreCliente=?, calleCliente=?, poblacionCliente=?, telefonoCliente=?, horaRealizacion=?, idEmpresa=?, estado=?, asignadoA=?, incidencia=?, comentarioInterno=?, comentarioExterno=? WHERE id=?";
 
         $stmt = $conexion->prepare($sql);
-
-        // Vincular parámetros
         $stmt->bind_param("sssssssiisss", $nombreCliente, $calleCliente, $poblacionCliente, $telefonoCliente, $horaRealizacion, $idEmpresa, $estado, $asignadoA, $incidencia, $comentarioInterno, $comentarioExterno, $id);
 
-        // Ejecutar la consulta
         if ($stmt->execute()) {
+            // Actualizar el estado del servicio
+            updateServiceStatus($conexion, $id);
+            // Insertar registro de actualización en el log
             insertarLog("Actualizado el servicio " . $id . ".", $conexion);
-            $stmt->close();
-            $conexion->close();
             header("location: modifyService.php?service=" .  $id);
         } else {
-            notificacion("No se ha podido actualizar.");
-            $stmt->close();
-            $conexion->close();
+            notificacion("No se ha podido actualizar el servicio.");
         }
 
-        actualizarSinAsignarAsignado();
-        actualizarEstadosServicios();
+        // Cerrar la conexión y liberar recursos
+        $stmt->close();
+        $conexion->close();
     }
+}
+
+function updateServiceStatus($conexion, $id) {
+    $fechaHoy = date("Y-m-d");
+
+    // Sentencia SQL para actualizar el estado del servicio
+    $sqlActualizarEstado = $conexion->prepare("
+        UPDATE services 
+        SET estado = 
+            CASE 
+                WHEN estado = 2 AND fechaServicio = ? THEN 3
+                WHEN estado = 3 AND fechaServicio < ? THEN 7
+                WHEN estado = 2 AND fechaServicio < ? THEN 7
+                WHEN estado = 1 AND fechaServicio = ? AND asignadoA != 0 THEN 3
+                WHEN estado = 1 AND fechaServicio < ? THEN 7
+                WHEN estado != 1 AND estado != 5 AND estado != 6 AND estado != 7 AND asignadoA = 0 THEN 1
+                WHEN estado = 1 AND asignadoA != 0 THEN 2
+                ELSE estado
+            END
+        WHERE id = ?
+    ");
+
+    $sqlActualizarEstado->bind_param("ssssss", $fechaHoy, $fechaHoy, $fechaHoy, $fechaHoy, $fechaHoy, $id);
+    $sqlActualizarEstado->execute();
+    $sqlActualizarEstado->close();
 }
 
 function modifyServiceByUser()
@@ -677,7 +768,7 @@ function modifyServiceByUser()
 
         $conexion = connectDB();
 
-        $sql = "UPDATE Services SET horaRealizacion=?, comentarioExterno=?, estado=?, incidencia=? WHERE id=?";
+        $sql = "UPDATE services SET horaRealizacion=?, comentarioExterno=?, estado=?, incidencia=? WHERE id=?";
 
         $stmt = $conexion->prepare($sql);
 
@@ -709,7 +800,7 @@ function modifyServiceByClient()
 
         $conexion = connectDB();
 
-        $sql = "UPDATE Services SET comentarioExterno=? WHERE id=?";
+        $sql = "UPDATE services SET comentarioExterno=? WHERE id=?";
 
         $stmt = $conexion->prepare($sql);
 
@@ -736,7 +827,7 @@ function setServiceIncidence($service_id, $value)
 
     $conexion = connectDB();
 
-    $sql = "UPDATE Services SET incidencia=? WHERE id=?";
+    $sql = "UPDATE services SET incidencia=? WHERE id=?";
 
     $stmt = $conexion->prepare($sql);
 

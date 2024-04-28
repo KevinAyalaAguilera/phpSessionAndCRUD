@@ -56,7 +56,7 @@ if ($service['incidencia'] == 1) {
 
 // Nota Externa
 echo '<label for="comentarioExterno" class="addedMargin"><b>Nota:</b></label>';
-echo '<input class="btn input" type="text" id="comentarioExterno" name="comentarioExterno" value="' . $service['comentarioExterno'] . '">';
+echo '<textarea class="btn input" id="comentarioExterno" name="comentarioExterno">' . $service['comentarioExterno'] . '</textarea>';
 echo '<div class="separadorInvisible"></div>';
 echo '<div class="separadorInvisible"></div>';
 echo '<div class="separadorInvisible"></div>';

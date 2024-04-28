@@ -2,11 +2,18 @@
 include_once "../controller/controller.php";
 include_once "./header.php";
 ?>
-<link rel="stylesheet" href="../css/frontpage.css?2211">
+<link rel="stylesheet" href="../css/frontpage.css<?php echo '?' .mt_rand(); ?>">
+<div class="background-container">
+    <img src="../img/pexels/pexels-photo-5025494.jpg" class="background-image soloMovil">
+    <img src="../img/pexels/pexels-photo-4391470.jpg" class="background-image soloDesktop">
+</div>
+<div class="content">
+
+
 <div class="frontpage">
-	<h4 class="frontpage">GRUPO</h4>
+	<h4 class="frontpage" style="font-size: 2em;">GRUPO</h4>
 	<img src="../img/cropped-Logo-valbea-300x277.png" class="mainlogo-frontpage">
-	<h4 class="frontpage">VALBEA</h4>
+	<h4 class="frontpage" style="font-size: 2em;">VALBEA</h4>
 </div>
 
 <a class="frontpage-right-btn" href="#first-cascade-wrapper" style="margin-top: 75vh;">^</a>
@@ -437,5 +444,6 @@ include_once "./header.php";
 </main>
 
 
+</div>
 </div>
 </div>

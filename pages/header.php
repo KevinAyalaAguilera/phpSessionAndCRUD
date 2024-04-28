@@ -3,7 +3,8 @@
 
 <head>
 	<meta charset="UTF-8">
-	<link rel="stylesheet" href="../css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, orientation=portrait">
+	<link rel="stylesheet" href="../css/style.css<?php echo '?' .mt_rand(); ?>">
 	<title>Grupo Valbea</title>
 	<link rel="icon" href="../img/cropped-Logo-valbea-1-32x32.png" sizes="32x32">
 </head>
@@ -14,7 +15,7 @@ if (isset($userROL)) {
 			// superadmin
 			echo '<div class="header">';
 			echo '<div class="headerMenu">';
-			echo '<img src="../img/cropped-Logo-valbea-300x277.png" class="mainlogo soloDesktop">';
+			echo '<img src="../img/cropped-Logo-valbea-300x277.png" class="mainlogo">';
 			echo '<a class="btn button" id="header-btn-cme" href="./myProfile.php?id=' . $_SESSION['userId'] . '">' . ucfirst($userName) . '</a>';
 			echo '<a class="btn button" id="header-btn-clist" href="./listServices.php">Servicios</a>';
 			echo '<a class="btn button" id="header-btn-cservice" href="./createService.php">Crear Servicio</a>';
@@ -29,7 +30,7 @@ if (isset($userROL)) {
 			// admin
 			echo '<div class="header">';
 			echo '<div class="headerMenu">';
-			echo '<img src="../img/cropped-Logo-valbea-300x277.png" class="mainlogo soloDesktop">';
+			echo '<img src="../img/cropped-Logo-valbea-300x277.png" class="mainlogo">';
 			echo '<a class="btn button" id="header-btn-cme" href="./myProfile.php?id=' . $_SESSION['userId'] . '">' . ucfirst($userName) . '</a>';
 			echo '<a class="btn button" id="header-btn-clist" href="./listServices.php">Servicios</a>';
 			echo '<a class="btn button" id="header-btn-cservice" href="./createService.php">Crear Servicio</a>';
@@ -40,7 +41,7 @@ if (isset($userROL)) {
 			// user
 			echo '<div class="header">';
 			echo '<div class="headerMenu">';
-			echo '<img src="../img/cropped-Logo-valbea-300x277.png" class="mainlogo soloDesktop">';
+			echo '<img src="../img/cropped-Logo-valbea-300x277.png" class="mainlogo">';
 			echo '<a class="btn button" id="header-btn-cme" href="./myProfile.php?id=' . $_SESSION['userId'] . '">' . ucfirst($userName) . '</a>';
 			echo '<a class="btn button" id="header-btn-clist" href="./listServices.php">Servicios</a>';
 			echo '<a class="btn button" href="./logOff.php">Salir</a>';
@@ -51,7 +52,7 @@ if (isset($userROL)) {
 		// empresa externa
 		echo '<div class="header">';
 		echo '<div class="headerMenu">';
-		echo '<img src="../img/cropped-Logo-valbea-300x277.png" class="mainlogo soloDesktop">';
+		echo '<img src="../img/cropped-Logo-valbea-300x277.png" class="mainlogo">';
 		echo '<a class="btn button" id="header-btn-cme" href="./myProfile.php?id=' . $_SESSION['userId'] . '">' . ucfirst($userName) . '</a>';
 		echo '<a class="btn button" id="header-btn-clist" href="./listServices.php">Servicios</a>';
 		echo '<a class="btn button" id="header-btn-cservice" href="./createService.php">Crear Servicio</a>';

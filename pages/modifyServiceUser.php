@@ -55,7 +55,7 @@ echo '<input type="hidden" id="incidencia" name="incidencia" ' . (($service['inc
 
 // Nota Externa
 echo '<label for="comentarioExterno" class="addedMargin"><b>Nota:</b></label>';
-echo '<input type="text" class="btn input" id="comentarioExterno" name="comentarioExterno" value="' . $service['comentarioExterno'] . '">';
+echo '<textarea class="btn input" id="comentarioExterno" name="comentarioExterno">' . $service['comentarioExterno'] . '</textarea>';
 
 echo '<div class="separadorInvisible"></div>';
 echo '<div class="separadorInvisible"></div>';
